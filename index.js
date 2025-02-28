@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 
 const {registerValidation, loginValidation, postCreateValidation} = require('./validations.js');
 const {checkToken} = require('./utils/checkAuth.js');
@@ -7,12 +8,12 @@ const {handleValidErr} = require('./utils/handleValidationErros.js');
 const { login, getMe, register} = require('./controllers/UserController.js');
 const {createPost, getUserWithPost,getPostByID, removePost, update} = require('./controllers/PostController.js');
 const {saveImage, upload} = require('./utils/saveImages.js');
-
-const PORT = process.env.PORT || 8080 ;
+const {hostname, port} = require('./config/server.config.js');
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 
 app.get('/', (req, res)=>{
@@ -35,6 +36,6 @@ app.delete('/posts/:id', checkToken, removePost);
 app.patch('/posts/:id', checkToken, postCreateValidation, handleValidErr, update);
 
 
-app.listen(PORT, () => {
-    console.log(`Server listening on port: ${PORT}...`);
+app.listen(port, () => {
+    console.log(`Server listening on port: ${hostname}:${port}...`);
 })
