@@ -85,7 +85,8 @@ async function getUserByIdUNIQUE(req, res){
     if (!userID){
       return res.status(404).json({msg:"Post not found"});
   }
-  res.json(userID.rows[0]);  
+  const {pass_hash, ...userData} = userID.rows[0];
+  res.json(userData);  
   }   catch(err){
     console.error('Ошибка выполнения запроса', err);
   }
