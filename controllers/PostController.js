@@ -5,11 +5,11 @@ const createPost = async (req,res) => {
         const post = {
             title: req.body.title,
             text: req.body.text,
-            imageUrl: req.body.imageUrl,
+            imageUrls: req.files.map(file => file.path),
             tags: req.body.tags,
             user: req.userId,
         };
-        await addPost(post.title, post.text, post.imageUrl, post.tags, post.user);
+        await addPost(post.title, post.text, post.imageUrls, post.tags, post.user);
         
         res.json(post);
 

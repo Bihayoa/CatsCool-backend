@@ -1,9 +1,9 @@
 const {pool} = require('../db');
 
-const addPost = async (title, text, imageUrl, tags, user) => {
-    const query = 'INSERT INTO post (title, text, image_url, tags, user_id) VALUES ($1, $2, $3, $4, $5);';
+const addPost = async (title, text, imageUrls, tags, user) => {
+    const query = 'INSERT INTO post (title, text, image_urls, tags, user_id) VALUES ($1, $2, $3, $4, $5);';
     try {
-        await pool.query(query, [title, text, imageUrl, tags, user]);  
+        await pool.query(query, [title, text, imageUrls, tags, user]);  
       } catch (err) {
         console.error('Ошибка при добавлении поста в бд', err);
       }

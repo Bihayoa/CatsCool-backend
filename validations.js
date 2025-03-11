@@ -19,7 +19,7 @@ const postCreateValidation = [
     body('title', 'Введи заголовок статьи').isLength({min: 3}).isString(),
     body('text', 'Введи текст статьи').optional().isString(),
     body('tags', 'Неверный формат тегов (нужен массив)').optional().isString(),
-    body('imageURL', 'Неверная ссылка на изображение').optional().isString(),
+    // body('imageURL', 'Неверная ссылка на изображение').optional().isString(),
 
 ]
 

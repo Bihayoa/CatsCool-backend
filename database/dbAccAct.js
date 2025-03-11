@@ -79,6 +79,18 @@ async function getUserById(id){
   }
 }
 
+async function getUserByIdUNIQUE(req, res){
+  try{
+    const userID = await pool.query('SELECT * FROM account WHERE id = $1', [req.params.id]);
+    if (!userID){
+      return res.status(404).json({msg:"Post not found"});
+  }
+  res.json(userID.rows[0]);  
+  }   catch(err){
+    console.error('Ошибка выполнения запроса', err);
+  }
+}
+
 async function findUserByLogin(login){
   try{
     const res = await pool.query('SELECT * FROM account WHERE login = $1', [login]);
@@ -102,4 +114,4 @@ async function findUserByLogin(login){
     console.error('Ошибка выполнения запроса', err);
   }
 }*/
-module.exports = {userAdd, userDeleteByID, getUserIdByLogin, findUserByEmail, findUserByLogin, getUserById};
+module.exports = {userAdd, userDeleteByID, getUserIdByLogin, findUserByEmail, findUserByLogin, getUserById, getUserByIdUNIQUE};

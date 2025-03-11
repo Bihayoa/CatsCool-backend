@@ -9,6 +9,7 @@ const { login, getMe, register} = require('./controllers/UserController.js');
 const {createPost, getUserWithPost,getPostByID, removePost, update} = require('./controllers/PostController.js');
 const {saveImage, upload} = require('./utils/saveImages.js');
 const {hostname, port} = require('./config/server.config.js');
+const { getUserById, getUserByIdUNIQUE } = require('./database/dbAccAct.js');
 
 const app = express();
 
@@ -20,18 +21,23 @@ app.get('/', (req, res)=>{
     res.send("hello world");
 })
 
-
+//auth
 app.post('/auth/register', registerValidation, handleValidErr, register);
 app.post('/auth/login', loginValidation, handleValidErr , login);
 app.get('/auth/me',checkToken, getMe);
 
-app.post('/upload', checkToken,upload.single('image'), saveImage);
+//unique
+app.get('/user/:id', getUserByIdUNIQUE);
 
+
+
+app.post('/upload/images', checkToken, upload.array('images', 5), saveImage);
 app.use('/uploads', express.static('uploads'));
 
-app.post('/posts', checkToken, postCreateValidation , handleValidErr, createPost);
-app.get('/posts', getUserWithPost);
-app.get('/posts/:id', checkToken, getPostByID);
+//posts
+app.post('/posts', checkToken, upload.array('images', 5), postCreateValidation, handleValidErr, createPost);
+// app.get('/posts', getUserWithPost);
+app.get('/posts/:id', getPostByID);
 app.delete('/posts/:id', checkToken, removePost);
 app.patch('/posts/:id', checkToken, postCreateValidation, handleValidErr, update);
 
