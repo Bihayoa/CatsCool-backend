@@ -111,7 +111,4 @@ const getMe = async (req,res) => {
 
 
 
-
-
-
 module.exports = {register, login, getMe};

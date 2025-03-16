@@ -1,4 +1,4 @@
-const {addPost, findAllUserPosts, showAllPosts, getPostWithUser, getPostById, deletePostById, updatePost} = require('../database/dbPostAct');
+const {addPost, getPost, findAllUserPosts, showAllPosts, getPostWithUser, getPostById, deletePostById, updatePost, getPostByIdAndUserLoginWithAvatarURL, feedPosts} = require('../database/dbPostAct');
 
 const createPost = async (req,res) => {
     try{
@@ -64,6 +64,30 @@ const getPostByID = async(req, res) => {
     }
 }
 
+const getPostByIDWithUserLoginAndAvatarURL = async(req, res) => {
+    try{
+        const post = await getPostByIdAndUserLoginWithAvatarURL(req.params.id);
+        if (!post){
+            return res.status(404).json({msg:"Post not found"});
+        }
+        post.user_liked = post.user_liked === null ?  0 : post.user_liked.length;
+        res.json(post);
+
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: "Ошибка при получении поста по айди"});
+    }
+}
+
+const putLike = async (req, res) => {
+    try{
+        const userLiked = await getPost(req.params.id, req.userId);
+        res.json(userLiked);
+    }catch(err){
+        console.error(err);
+    }
+}
+
 const removePost = async(req,res) =>{ 
     try{
         await deletePostById(req.params.id);
@@ -92,5 +116,16 @@ const update = async(req,res) =>{
 }
 
 
+const getFeedPosts = async(req, res) => {
+    try{
+        const limit = req.query.limit || 5;
+        const offset = req.query.offset || 0;
+        const posts = await feedPosts(offset, limit);
+        res.json(posts);
+    } catch(err){
+        console.error("err: ", err)
+    }
+}
 
-module.exports = {createPost, getAllYourPosts, getAllPosts, getUserWithPost,getPostByID, removePost, update};
+
+module.exports = {createPost, getAllYourPosts, putLike, getAllPosts, getUserWithPost,getPostByID, removePost, update, getPostByIDWithUserLoginAndAvatarURL, getFeedPosts};

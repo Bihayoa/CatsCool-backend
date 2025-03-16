@@ -1,12 +1,13 @@
 const multer = require('multer');
 const path = require('path')
+const {randomUUID} = require('crypto');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
+        cb(null, randomUUID().toString() + Date.now() + path.extname(file.originalname));
     }
 })
 
