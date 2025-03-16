@@ -121,6 +121,13 @@ const getFeedPosts = async(req, res) => {
         const limit = req.query.limit || 5;
         const offset = req.query.offset || 0;
         const posts = await feedPosts(offset, limit);
+        posts.forEach(post => {
+            if (post.user_liked === null) {
+              post.user_liked = 0;
+            }else{
+                post.user_liked = post.user_liked.length;
+            }
+          });
         res.json(posts);
     } catch(err){
         console.error("err: ", err)

@@ -63,21 +63,25 @@ const getPostByIdAndUserLoginWithAvatarURL = async (post_id) => {
 }
 
 const getPost = async(post_id, userId) => {
-    const query = await pool.query('SELECT user_liked FROM post WHERE post_id = $1', [post_id]);
-    const post = query.rows[0].user_liked;
-    if ( post !== null){
-      if (post.includes(`${userId}`)){
-        await pool.query('UPDATE post SET user_liked = array_remove(user_liked, $1) WHERE post_id = $2', [userId, post_id]);
-        return post.length - 1;
-    } else{
-        await pool.query('UPDATE post SET user_liked = array_append(user_liked, $1) WHERE post_id = $2', [userId, post_id]);    }
-        return post.length + 1;
-}else{
-  await pool.query('UPDATE post SET user_liked = array_append(user_liked, $1) WHERE post_id = $2', [userId, post_id]);
-  return 1;
-}
-}
-
+  const query = await pool.query('SELECT user_liked FROM post WHERE post_id = $1', [post_id]);
+  if (query.rows[0] && query.rows[0] !== undefined) {
+      const post = query.rows[0].user_liked;
+      if (post !== null && post !== undefined) {
+          if (post.includes(`${userId}`)) {
+              await pool.query('UPDATE post SET user_liked = array_remove(user_liked, $1) WHERE post_id = $2', [userId, post_id]);
+              return { likeCount: post.length - 1, liked: false }; // Вернуть количество лайков и статус
+          } else {
+              await pool.query('UPDATE post SET user_liked = array_append(user_liked, $1) WHERE post_id = $2', [userId, post_id]);
+          }
+          return { likeCount: post.length + 1, liked: true }; // Вернуть количество лайков и статус
+      } else {
+          await pool.query('UPDATE post SET user_liked = array_append(user_liked, $1) WHERE post_id = $2', [userId, post_id]);
+          return { likeCount: 1, liked: true }; // Вернуть количество лайков и статус
+      }
+  } else {
+      return { likeCount: 0, liked: false }; // Возвращаем, если пост не найден
+  }
+};
 
 const deletePostById = async(post_id) => {
   try{
