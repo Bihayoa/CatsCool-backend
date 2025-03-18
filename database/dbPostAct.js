@@ -114,8 +114,8 @@ const feedPosts = async (offset, limit) => {
   `SELECT p.*, a.login, a.avatar_url
         FROM post p
         JOIN account a ON p.user_id = a.id
-        ORDER BY p.post_id LIMIT $1 OFFSET $2`
-, [limit, offset]
+        ORDER BY p.post_id DESC LIMIT $1 OFFSET $2`
+, [limit, offset ]
     );
     return res.rows;
   } catch (err) {

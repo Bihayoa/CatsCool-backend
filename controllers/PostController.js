@@ -120,6 +120,7 @@ const getFeedPosts = async(req, res) => {
     try{
         const limit = req.query.limit || 5;
         const offset = req.query.offset || 0;
+        // const sort = req.query.sort || "p.post_id" на будущее мб
         const posts = await feedPosts(offset, limit);
         posts.forEach(post => {
             if (post.user_liked === null) {

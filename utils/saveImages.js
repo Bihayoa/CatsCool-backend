@@ -15,7 +15,7 @@ const upload = multer({
     storage: storage,
     fileFilter: function (req, file, cb) {
         var ext = path.extname(file.originalname);
-        if(ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg' && ext !== '.webp' ){
+        if(ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg' && ext !== '.webp' && ext !== '.gif' ){
             return cb(new Error('Только изображения с разрешением .png, .jpg, .jpeg, .webp допустимы'), false)
         }
         cb(null, true)
