@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
+const { tokenKey } = require('../config/server.config');
 
 const checkToken = (req, res, next) => {
     const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');  //Токен отправляется вместе с надписью Bearer и мы её здесь убираем
     if (token){
         try{
-            const decoded = jwt.verify(token, 'VeRySeCrEt');
+            const decoded = jwt.verify(token, tokenKey);
 
             req.userId = decoded._id;
             

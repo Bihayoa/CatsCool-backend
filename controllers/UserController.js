@@ -2,9 +2,11 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 const {userAdd, getUserIdByLogin, findUserByEmail, findUserByLogin, getUserById} = require('../database/dbAccAct');
+const { tokenKey } = require('../config/server.config');
 
 const register = async (req, res) => {
     try{
+    //Хэшируем пароль
     const password = req.body.password;
     const salt = await bcrypt.genSalt(10);
     const password_Hash = await bcrypt.hash(password, salt); 
@@ -28,7 +30,7 @@ const register = async (req, res) => {
         {
             _id: id
         },
-        'VeRySeCrEt',
+        tokenKey,
         {
             expiresIn: "30d"
         });
@@ -67,7 +69,7 @@ const login = async (req, res) => {
 
         const token = jwt.sign(
             {_id: user.id},
-                'VeRySeCrEt',
+                tokenKey,
             {expiresIn: "30d"}
         );
 

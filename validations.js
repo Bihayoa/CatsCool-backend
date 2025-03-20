@@ -12,7 +12,6 @@ const registerValidation = [
 const loginValidation = [
     body('password', 'укажите пароль минимум 5 символов').isLength({min: 5}),
     body('email','Неверный формат почты').isEmail(),
-    
 ];
 
 const postCreateValidation = [

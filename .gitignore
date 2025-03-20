@@ -1,2 +1,4 @@
 /node-modules
 /uploads
+/config
+/db.js

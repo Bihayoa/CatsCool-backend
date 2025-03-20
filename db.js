@@ -11,5 +11,4 @@ pool.connect()
     .then(() => console.log('Connecting to db success!'))
     .catch((err)=> console.log('connect failed', err));
 
-
 module.exports = {pool};

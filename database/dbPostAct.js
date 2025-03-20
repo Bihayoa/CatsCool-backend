@@ -69,14 +69,14 @@ const getPost = async(post_id, userId) => {
       if (post !== null && post !== undefined) {
           if (post.includes(`${userId}`)) {
               await pool.query('UPDATE post SET user_liked = array_remove(user_liked, $1) WHERE post_id = $2', [userId, post_id]);
-              return { likeCount: post.length - 1, liked: false }; // Вернуть количество лайков и статус
+              return { likeCount: post.length - 1, liked: false }; 
           } else {
               await pool.query('UPDATE post SET user_liked = array_append(user_liked, $1) WHERE post_id = $2', [userId, post_id]);
           }
-          return { likeCount: post.length + 1, liked: true }; // Вернуть количество лайков и статус
+          return { likeCount: post.length + 1, liked: true }; 
       } else {
           await pool.query('UPDATE post SET user_liked = array_append(user_liked, $1) WHERE post_id = $2', [userId, post_id]);
-          return { likeCount: 1, liked: true }; // Вернуть количество лайков и статус
+          return { likeCount: 1, liked: true }; 
       }
   } else {
       return { likeCount: 0, liked: false }; // Возвращаем, если пост не найден
@@ -94,11 +94,7 @@ const deletePostById = async(post_id) => {
 
 const updatePost = async(title, text, imageURL, tags, id) => {
   try{
-    const query = `
-      UPDATE post
-      SET title = $1, text = $2, image_url = $3, tags = $4
-      WHERE post_id = $5
-    `;
+    const query = `UPDATE post SET title = $1, text = $2, image_url = $3, tags = $4 WHERE post_id = $5`;
 
     const values = [title, text, imageURL, tags, id];
     await pool.query(query, values);
@@ -110,13 +106,9 @@ const updatePost = async(title, text, imageURL, tags, id) => {
 
 const feedPosts = async (offset, limit) => {
   try {
-    const res = await pool.query(
-  `SELECT p.*, a.login, a.avatar_url
-        FROM post p
-        JOIN account a ON p.user_id = a.id
-        ORDER BY p.post_id DESC LIMIT $1 OFFSET $2`
-, [limit, offset ]
-    );
+    await pool.query('UPDATE post SET views = views + 1 WHERE post_id IN (SELECT post_id FROM post ORDER BY post_id DESC LIMIT $1 OFFSET $2)', [limit, offset]);
+
+    const res = await pool.query(`SELECT p.*, a.login, a.avatar_url FROM post p JOIN account a ON p.user_id = a.id ORDER BY p.post_id DESC LIMIT $1 OFFSET $2`, [limit, offset ]);
     return res.rows;
   } catch (err) {
     console.error("error fetching feedPosts", err);

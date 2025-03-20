@@ -6,10 +6,10 @@ const {checkToken} = require('./utils/checkAuth.js');
 const {handleValidErr} = require('./utils/handleValidationErros.js');
 
 const { login, getMe, register} = require('./controllers/UserController.js');
-const {createPost, getUserWithPost,getPostByID, removePost, update, getPostByIDWithUserLoginAndAvatarURL, getFeedPosts, putLike} = require('./controllers/PostController.js');
+const {createPost, removePost, update, getPostByIDWithUserLoginAndAvatarURL, getFeedPosts, putLike} = require('./controllers/PostController.js');
 const {saveImage, upload} = require('./utils/saveImages.js');
 const {hostname, port} = require('./config/server.config.js');
-const { getUserById, getUserByIdUNIQUE } = require('./database/dbAccAct.js');
+const { getUserByIdUNIQUE } = require('./database/dbAccAct.js');
 
 const app = express();
 
@@ -37,13 +37,13 @@ app.use('/uploads', express.static('uploads'));
 //posts
 app.post('/posts', checkToken, upload.array('images', 5), postCreateValidation, handleValidErr, createPost);
 // app.get('/posts', getUserWithPost);
-app.get('/posts/:id', getPostByIDWithUserLoginAndAvatarURL);
 app.delete('/posts/:id', checkToken, removePost);
 app.patch('/posts/:id', checkToken, postCreateValidation, handleValidErr, update);
 app.post('/posts/putlike/:id', checkToken, putLike);
 
 //Something like feed   
 app.get('/api/posts', getFeedPosts)
+app.get('/posts/:id', getPostByIDWithUserLoginAndAvatarURL);
 
 app.listen(port, () => {
     console.log(`Server listening on port: ${hostname}:${port}...`);
