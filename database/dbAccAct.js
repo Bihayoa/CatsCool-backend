@@ -51,7 +51,7 @@ async function getUserByIdUNIQUE(req, res){
   try{
     const userID = await pool.query('SELECT * FROM account WHERE id = $1', [req.params.id]);
     if (!userID){
-      return res.status(404).json({msg:"Post not found"});
+      return res.status(404).json({msg:"User not found"});
   }
   const {pass_hash, ...userData} = userID.rows[0];
   res.json(userData);  
@@ -63,6 +63,9 @@ async function getUserByIdUNIQUE(req, res){
 async function findUserByLogin(login){
   try{
     const res = await pool.query('SELECT * FROM account WHERE login = $1', [login]);
+    if (!res){
+      return res.status(404).json({msg:"User not found"});
+  }
   return res.rows[0];
   }   catch(err){
     console.error('Ошибка выполнения запроса', err);

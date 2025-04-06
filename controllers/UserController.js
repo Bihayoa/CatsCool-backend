@@ -107,10 +107,29 @@ const getMe = async (req,res) => {
     }
 };
 
+const getUserByLog = async (req,res) => {
+    try{
+        const user = await findUserByLogin(req.params.login);
+
+        if (!user){
+            return res.status(404).json({
+                message: "Пользователь не найден"
+            });
+
+        }
+        const {pass_hash, ...userData} = user;
+        res.json(userData);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            msg: 'Нет доступа',
+        });
+    }
+};
 
 
 
 
 
 
-module.exports = {register, login, getMe};
+module.exports = {register, login, getMe, getUserByLog};

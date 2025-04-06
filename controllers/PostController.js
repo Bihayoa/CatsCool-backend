@@ -1,4 +1,5 @@
-const {addPost, getPost, findAllUserPosts, showAllPosts, getPostWithUser, getPostById, deletePostById, updatePost, getPostByIdAndUserLoginWithAvatarURL, feedPosts} = require('../database/dbPostAct');
+const { findUserByLogin } = require('../database/dbAccAct');
+const {addPost, getPost, findAllUserPosts, showAllPosts, getPostWithUser, getPostById, deletePostById, updatePost, getPostByIdAndUserLoginWithAvatarURL, feedPosts, postsByID} = require('../database/dbPostAct');
 
 const createPost = async (req,res) => {
     try{
@@ -131,9 +132,39 @@ const getFeedPosts = async(req, res) => {
           });
         res.json(posts);
     } catch(err){
-        console.error("err: ", err)
+        console.error("err: ", err);
     }
 }
 
 
-module.exports = {createPost, getAllYourPosts, putLike, getAllPosts, getUserWithPost,getPostByID, removePost, update, getPostByIDWithUserLoginAndAvatarURL, getFeedPosts};
+//Получение постов по айдишнику через токен\
+
+const getPostsByID = async(req,res) => {
+    try{
+        const limit = req.query.limit || 5;
+        const offset = req.query.offset || 0;
+        const ids = req.query.ids;
+
+        const idsArray = ids ? ids.split(',') : [];
+
+        const posts = await postsByID(offset, limit, idsArray);
+        if(posts === undefined || posts === null){
+            res.json([])
+        }else{
+            posts.forEach(post => {
+                if (post.user_liked === null){
+                    post.user_liked = 0;
+                }else{
+                    post.user_liked = post.user_liked.length;
+                }
+            });
+            res.json(posts);
+    }
+    }catch(err){
+        console.error("err: ", err);
+    }
+}
+
+
+
+module.exports = {createPost,getPostsByID, getAllYourPosts, putLike, getAllPosts, getUserWithPost,getPostByID, removePost, update, getPostByIDWithUserLoginAndAvatarURL, getFeedPosts};

@@ -115,6 +115,15 @@ const feedPosts = async (offset, limit) => {
   }
 };
 
+const postsByID = async(offset, limit, idsArray) => {
+  try{
+    await pool.query('UPDATE post SET views = views + 1 WHERE post_id = ANY($1)', [idsArray]);
 
+    const res = await pool.query('SELECT * FROM post WHERE post_id = ANY($1) ORDER BY post_id DESC OFFSET $2 LIMIT $3', [idsArray, offset, limit]);
+    return res.rows;
+  }catch(err){
+    console.error("error fetching feedPosts", err);
+  }
+}
 
-module.exports = {addPost, getPost, findAllUserPosts,showAllPosts, getPostWithUser, getPostById, deletePostById, updatePost, feedPosts, getPostByIdAndUserLoginWithAvatarURL};
+module.exports = {addPost, getPost, postsByID, findAllUserPosts,showAllPosts, getPostWithUser, getPostById, deletePostById, updatePost, feedPosts, getPostByIdAndUserLoginWithAvatarURL};
