@@ -7,7 +7,7 @@ const {handleValidErr} = require('./utils/handleValidationErros.js');
 
 const { login, getMe, register, getUserByLog} = require('./controllers/UserController.js');
 const {createPost, removePost, update, getPostByIDWithUserLoginAndAvatarURL, getFeedPosts, putLike, getPostsByID} = require('./controllers/PostController.js');
-const {saveImage, upload} = require('./utils/saveImages.js');
+const {saveImageForAvatar, upload} = require('./utils/saveImages.js');
 const {hostname, port} = require('./config/server.config.js');
 const { getUserByIdUNIQUE } = require('./database/dbAccAct.js');
 
@@ -32,7 +32,7 @@ app.get('/user/:id', getUserByIdUNIQUE);
 //get user by login
 app.get('/api/user/:login', getUserByLog);
 
-app.post('/upload/images', checkToken, upload.array('images', 5), saveImage);
+app.post('/upload/images', checkToken, upload.array('images', 1), saveImageForAvatar);
 app.use('/uploads', express.static('uploads'));
 
 //posts

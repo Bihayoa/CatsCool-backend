@@ -71,4 +71,20 @@ async function findUserByLogin(login){
     console.error('Ошибка выполнения запроса', err);
   }
 }
-module.exports = {userAdd, userDeleteByID, getUserIdByLogin, findUserByEmail, findUserByLogin, getUserById, getUserByIdUNIQUE};
+
+async function changeAvatar(userID, image_url){
+  try{
+    const res = await pool.query('UPDATE account SET avatar_url = $1 WHERE id = $2', [image_url, userID])
+    if (!res){
+      return res.status(404).json({msg:"Аватарка не загрузилась"});
+  }
+    return res.rows[0];
+
+  }catch(err){
+    console.error('Ошибка выполнения запроса на обновление аватара', err);
+
+  }
+}
+
+
+module.exports = {userAdd, userDeleteByID, getUserIdByLogin, findUserByEmail, findUserByLogin, getUserById, getUserByIdUNIQUE, changeAvatar};

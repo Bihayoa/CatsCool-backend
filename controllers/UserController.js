@@ -130,6 +130,4 @@ const getUserByLog = async (req,res) => {
 
 
 
-
-
 module.exports = {register, login, getMe, getUserByLog};

@@ -1,6 +1,7 @@
 const multer = require('multer');
 const path = require('path')
 const {randomUUID} = require('crypto');
+const { changeAvatar } = require('../database/dbAccAct');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -25,9 +26,12 @@ const upload = multer({
 
 });
 
-const saveImage = (req, res) => {
+const saveImageForAvatar = async (req, res) => {
     try{
-        console.log(req.files);
+        // console.log(req.file.path, req.userId);
+        const image_url = req.files[0].path;
+        await changeAvatar(req.userId, image_url);
+        res.json({msg: "Avatar was loaded", avatar_url : image_url})
     }catch(err){
         res.status(500).send("Ошибка загрузки фоток")
     }
@@ -35,4 +39,4 @@ const saveImage = (req, res) => {
 
 
 
-module.exports = {upload, saveImage}
+module.exports = {upload, saveImageForAvatar}
