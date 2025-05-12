@@ -1,5 +1,8 @@
-const { findUserByLogin } = require('../database/dbAccAct');
+//IMPORTS
 const {addPost, getPost, findAllUserPosts, showAllPosts, getPostWithUser, getPostById, deletePostById, updatePost, getPostByIdAndUserLoginWithAvatarURL, feedPosts, postsByID} = require('../database/dbPostAct');
+
+
+//-----------------------------------------API-------------------------------------
 
 const createPost = async (req,res) => {
     try{

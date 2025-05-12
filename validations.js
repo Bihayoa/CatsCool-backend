@@ -22,5 +22,12 @@ const postCreateValidation = [
 
 ]
 
+const messageValidation = [
+    body('content', 'Введи что-то помимо пустой строки').isLength({min: 1}).isString(),
+]
 
-module.exports = {registerValidation, loginValidation, postCreateValidation};
+const descriptionValidation = [
+    body('description', 'Введи описание аккаунта').isLength({min: 1}).isString(),
+]
+
+module.exports = {registerValidation, loginValidation, postCreateValidation, messageValidation, descriptionValidation};

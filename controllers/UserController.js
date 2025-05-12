@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const {userAdd, getUserIdByLogin, findUserByEmail, findUserByLogin, getUserById} = require('../database/dbAccAct');
+const {userAdd, getUserIdByLogin, findUserByEmail, findUserByLogin, getUserById, updateDescription} = require('../database/dbAccAct');
 const { tokenKey } = require('../config/server.config');
 
 const register = async (req, res) => {
@@ -127,7 +127,17 @@ const getUserByLog = async (req,res) => {
     }
 };
 
+const changeDescription = async(req, res) => {
+    try{
+        const descriptionN = req.body.description;
+        const description = await updateDescription(req.userId, descriptionN);
+        //ПО хорошему надо какую-нибудь проверку, но я хз как останется так пока
+        // res.json(description);
+        res.json("Description was updated");
+    }catch(err){
+        console.error(err);
+    }
+}
 
 
-
-module.exports = {register, login, getMe, getUserByLog};
+module.exports = {register, login, getMe, getUserByLog, changeDescription};

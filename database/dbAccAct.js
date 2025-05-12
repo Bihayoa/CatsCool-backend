@@ -87,4 +87,13 @@ async function changeAvatar(userID, image_url){
 }
 
 
-module.exports = {userAdd, userDeleteByID, getUserIdByLogin, findUserByEmail, findUserByLogin, getUserById, getUserByIdUNIQUE, changeAvatar};
+async function updateDescription(userID, description){
+  try{
+    const res = await pool.query('UPDATE account SET description = $1 WHERE id = $2', [description, userID]);
+    return res.rows[0];
+  }catch(err){
+    console.error("Ошибка ВО ВРЕМЯ Обновления описания аккаунта: ", err);
+  }
+}
+
+module.exports = {userAdd, userDeleteByID, getUserIdByLogin, findUserByEmail, findUserByLogin, getUserById, getUserByIdUNIQUE, changeAvatar, updateDescription};
